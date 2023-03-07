@@ -20,11 +20,12 @@ const (
 	success level = "success"
 	warning level = "warning"
 	danger  level = "danger"
+	info    level = "info"
 )
 
 func NewLogger(service string) *Logger {
 	if service == "" {
-		panic("service name can't be empty")
+		panic("service name cannot be empty")
 	}
 
 	return &Logger{
@@ -45,13 +46,17 @@ func (logger *Logger) LogDangerMessageWithContext(ctx context.Context, event str
 	logger.logMessage(ctx, danger, event, object)
 }
 
-func (logger *Logger) logMessage(ctx context.Context, flag level, event string, object []Object) {
+func (logger *Logger) LogInfoMessageWithContext(ctx context.Context, event string, object []Object) {
+	logger.logMessage(ctx, info, event, object)
+}
+
+func (logger *Logger) logMessage(ctx context.Context, level level, event string, object []Object) {
 	properties := logger.getProperties(ctx, object)
 
 	message := map[string]interface{}{
 		"id":         uuid.Must(uuid.NewRandom()).String(),
 		"service":    logger.serviceName,
-		"level":      flag,
+		"level":      level,
 		"event":      event,
 		"properties": properties,
 		"time":       time.Now().Format(time.RFC3339Nano),
@@ -62,7 +67,7 @@ func (logger *Logger) logMessage(ctx context.Context, flag level, event string, 
 		log.Printf("marshaling data failed %x", err.Error())
 	}
 
-	logger.writer.sendToSQS(ctx, data)
+	logger.writer.writeToExternal(ctx, data)
 }
 
 func (logger *Logger) getProperties(ctx context.Context, objects []Object) map[string]interface{} {
