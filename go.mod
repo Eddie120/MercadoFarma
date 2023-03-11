@@ -1,8 +1,9 @@
 module github.com/mercadofarma/services
 
-go 1.17
+go 1.20
 
 require (
+	github.com/aws/aws-lambda-go v1.37.0
 	github.com/google/uuid v1.3.0
 	github.com/stretchr/testify v1.8.1
 )

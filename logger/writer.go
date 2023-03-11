@@ -4,6 +4,4 @@ import "context"
 
 type Writer struct{}
 
-func (w *Writer) sendToSQS(ctx context.Context, data []byte) {
-
-}
+func (w *Writer) writeToExternal(ctx context.Context, data []byte) {}
