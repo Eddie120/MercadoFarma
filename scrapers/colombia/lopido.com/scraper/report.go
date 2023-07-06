@@ -88,15 +88,14 @@ func (r *Report) setRows(results SearchResult) {
 		return
 	}
 
-	var cells []*core.Cell
+	r.Table.Rows = make([]*core.Row, 0)
+
 	products := results.ProductSearch.Products
 	for _, product := range products {
+		var cells []*core.Cell
 		r.setCells(&cells, product)
-	}
-
-	r.Table.Rows = []*core.Row{
-		{
+		r.Table.Rows = append(r.Table.Rows, &core.Row{
 			Cells: cells,
-		},
+		})
 	}
 }

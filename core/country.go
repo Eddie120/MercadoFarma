@@ -2,8 +2,8 @@ package core
 
 type Country string
 
-const colombia Country = "colombia"
+const Colombia Country = "colombia"
 
 var CountriesAllowed = map[Country]bool{
-	colombia: true,
+	Colombia: true,
 }
