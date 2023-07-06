@@ -35,3 +35,29 @@ func TestNewScraperSuccess(t *testing.T) {
 	rows := scraper.Report.Table.Rows
 	c.Len(rows, 16)
 }
+
+func TestNewScraperNotFound(t *testing.T) {
+	c := assert.New(t)
+
+	httpmock.Activate()
+	defer httpmock.DeactivateAndReset()
+
+	var urlMock = baseUrl
+	urlMock = fmt.Sprintf(urlMock, "asdf", "asdf")
+	finalUrl := urlMock + remaining
+
+	file := httpmock.File("../samples/not_found.json")
+	httpmock.RegisterResponder(http.MethodGet, finalUrl, httpmock.NewJsonResponderOrPanic(http.StatusOK, file))
+
+	const query = "asdf"
+	const country core.Country = "colombia"
+	const city core.City = "cali"
+	scraper, _ := NewScraper(&http.Client{}, query, country, city)
+
+	ctx := context.Background()
+	err := scraper.Start(ctx)
+	c.Nil(err)
+
+	rows := scraper.Report.Table.Rows
+	c.Empty(rows)
+}
