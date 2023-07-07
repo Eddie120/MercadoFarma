@@ -34,7 +34,7 @@ type Scraper struct {
 	City    core.City
 }
 
-func NewScraper(client *http.Client, query string, country core.Country, city core.City) (*Scraper, error) {
+func NewScraper(client *http.Client, query string, country core.Country, city core.City, logger *log.Logger) (*Scraper, error) {
 	if client == nil {
 		return nil, MissingHttpClient
 	}
@@ -55,7 +55,7 @@ func NewScraper(client *http.Client, query string, country core.Country, city co
 		Client: client,
 		Query:  query,
 		Report: &Report{},
-		Log:    log.Default(),
+		Log:    logger,
 	}, nil
 }
 

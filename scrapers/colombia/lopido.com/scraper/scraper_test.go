@@ -6,6 +6,7 @@ import (
 	"github.com/jarcoal/httpmock"
 	"github.com/mercadofarma/services/core"
 	"github.com/stretchr/testify/assert"
+	"log"
 	"net/http"
 	"testing"
 )
@@ -26,7 +27,7 @@ func TestNewScraperSuccess(t *testing.T) {
 	const query = "dolex"
 	const country core.Country = "colombia"
 	const city core.City = "cali"
-	scraper, _ := NewScraper(&http.Client{}, query, country, city)
+	scraper, _ := NewScraper(&http.Client{}, query, country, city, log.Default())
 
 	ctx := context.Background()
 	err := scraper.Start(ctx)
@@ -52,7 +53,7 @@ func TestNewScraperNotFound(t *testing.T) {
 	const query = "asdf"
 	const country core.Country = "colombia"
 	const city core.City = "cali"
-	scraper, _ := NewScraper(&http.Client{}, query, country, city)
+	scraper, _ := NewScraper(&http.Client{}, query, country, city, log.Default())
 
 	ctx := context.Background()
 	err := scraper.Start(ctx)

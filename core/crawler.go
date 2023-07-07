@@ -31,11 +31,16 @@ func NewCrawlerHandlerProcessor(instance Crawler, data []byte, config CrawlerCon
 }
 
 func (handler *CrawlerHandlerProcessor) Run(ctx context.Context) error {
-	return handler.instance.Crawl(ctx, handler.inputs)
+	var notifier HandlerFunc
+	return handler.instance.Crawl(ctx, handler.inputs, notifier)
+}
+
+type Notifier interface {
+	Notify(details *Detail) error
 }
 
 type Crawler interface {
-	Crawl(ctx context.Context, input *SearchInput) error
+	Crawl(ctx context.Context, input *SearchInput, notifier Notifier) error
 }
 
 func CrawlerProcessor(method factory, config CrawlerConfig) func(ctx context.Context, event *events.SNSEvent) error {
