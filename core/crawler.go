@@ -31,7 +31,6 @@ func NewCrawlerHandlerProcessor(instance Crawler, data []byte, config CrawlerCon
 }
 
 func (handler *CrawlerHandlerProcessor) Run(ctx context.Context) error {
-	var notifier HandlerFunc
 	return handler.instance.Crawl(ctx, handler.inputs, notifier)
 }
 

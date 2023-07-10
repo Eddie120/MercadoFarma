@@ -17,9 +17,9 @@ func TestNewScraperSuccess(t *testing.T) {
 	httpmock.Activate()
 	defer httpmock.DeactivateAndReset()
 
-	var urlMock = baseUrl
+	var urlMock = BaseUrl
 	urlMock = fmt.Sprintf(urlMock, "dolex", "dolex")
-	finalUrl := urlMock + remaining
+	finalUrl := urlMock + Remaining
 
 	file := httpmock.File("../samples/dolex.json")
 	httpmock.RegisterResponder(http.MethodGet, finalUrl, httpmock.NewJsonResponderOrPanic(http.StatusOK, file))
@@ -43,9 +43,9 @@ func TestNewScraperNotFound(t *testing.T) {
 	httpmock.Activate()
 	defer httpmock.DeactivateAndReset()
 
-	var urlMock = baseUrl
+	var urlMock = BaseUrl
 	urlMock = fmt.Sprintf(urlMock, "asdf", "asdf")
-	finalUrl := urlMock + remaining
+	finalUrl := urlMock + Remaining
 
 	file := httpmock.File("../samples/not_found.json")
 	httpmock.RegisterResponder(http.MethodGet, finalUrl, httpmock.NewJsonResponderOrPanic(http.StatusOK, file))
