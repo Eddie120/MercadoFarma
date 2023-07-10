@@ -3,21 +3,13 @@ package scraper
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
+	"github.com/mercadofarma/services/commons"
 	"github.com/mercadofarma/services/core"
 	"io"
 	"log"
 	"net/http"
 	"strings"
-)
-
-var (
-	MissingHttpClient    = errors.New("missing http client")
-	MissingQueryParam    = errors.New("query can not be empty")
-	UnexpectedStatusCode = errors.New("unexpected status code")
-	InvalidCountry       = errors.New("invalid country")
-	InvalidCity          = errors.New("invalid city")
 )
 
 var baseUrl = "https://www.lopido.com/%s?_q=%s"
@@ -36,19 +28,19 @@ type Scraper struct {
 
 func NewScraper(client *http.Client, query string, country core.Country, city core.City, logger *log.Logger) (*Scraper, error) {
 	if client == nil {
-		return nil, MissingHttpClient
+		return nil, commons.MissingHttpClient
 	}
 
 	if len(strings.Trim(query, " ")) == 0 {
-		return nil, MissingQueryParam
+		return nil, commons.MissingQueryParam
 	}
 
 	if country == "" || !isValidCountry[country] {
-		return nil, InvalidCountry
+		return nil, commons.InvalidCountry
 	}
 
 	if city == "" || !isValidCity[city] {
-		return nil, InvalidCity
+		return nil, commons.InvalidCity
 	}
 
 	return &Scraper{
@@ -79,7 +71,7 @@ func (s *Scraper) Start(ctx context.Context) error {
 
 	if response.StatusCode != http.StatusOK {
 		s.Log.Println("unexpected status code: ", response.Status)
-		return UnexpectedStatusCode
+		return commons.UnexpectedStatusCode
 	}
 
 	err = json.NewDecoder(response.Body).Decode(&defaultResponse)
