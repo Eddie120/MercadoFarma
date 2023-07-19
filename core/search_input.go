@@ -13,9 +13,10 @@ var (
 )
 
 type SearchInput struct {
-	Query   string  `json:"query"`
-	Country Country `json:"country"`
-	City    City    `json:"city"`
+	Query          string  `json:"query"`
+	Country        Country `json:"country"`
+	City           City    `json:"city"`
+	CanonicalQuery string  `json:"canonical_query"`
 }
 
 func NewSearchInput(data []byte) (*SearchInput, error) {
