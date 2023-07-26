@@ -3,6 +3,7 @@ package details
 import (
 	"context"
 	"errors"
+	"github.com/google/uuid"
 	"github.com/mercadofarma/services/core"
 	"github.com/mercadofarma/services/db"
 	"log"
@@ -37,7 +38,9 @@ func (service *ServiceImplementation) InsertDetail(ctx context.Context, detail *
 		return errors.New("table cannot be nil")
 	}
 
-	const query string = "INSERT INTO mercadofarma.details (canonical_query,status,message_error,table) VALUES(?,?,?,?);"
+	detail.Id = uuid.New().String()
+
+	const query string = "INSERT INTO mercadofarma.details (id,canonical_query,status,message_error,table) VALUES(?,?,?,?);"
 	args := []interface{}{detail.CanonicalQuery, detail.Status, detail.MessageError, detail.Table}
 
 	_, err := service.dbAccess.ExecWithContext(ctx, query, args...)

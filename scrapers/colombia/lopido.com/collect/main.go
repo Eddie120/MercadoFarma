@@ -29,7 +29,7 @@ func (c *Collector) Crawl(ctx context.Context, input *core.SearchInput, notifier
 	scraper, err := lopido.NewScraper(&client, input.Query, input.Country, input.City, logger)
 	if err != nil {
 		logger.Println("Create a new scraper failed: ", err.Error())
-		if err := notify(err, detail, nil, notifier, logger); err != nil {
+		if err := notify(ctx, err, detail, nil, notifier, logger); err != nil {
 			return err
 		}
 
@@ -39,17 +39,17 @@ func (c *Collector) Crawl(ctx context.Context, input *core.SearchInput, notifier
 	err = scraper.Start(ctx)
 	if err != nil {
 		logger.Println("Scraper execution failed: ", err.Error())
-		if err := notify(err, detail, nil, notifier, logger); err != nil {
+		if err := notify(ctx, err, detail, nil, notifier, logger); err != nil {
 			return err
 		}
 
 		return err
 	}
 
-	return notify(err, detail, scraper.Report.Table, notifier, logger)
+	return notify(ctx, err, detail, scraper.Report.Table, notifier, logger)
 }
 
-func notify(err error, detail *core.Detail, table *core.Table, notifier core.Notifier, logger *log.Logger) error {
+func notify(ctx context.Context, err error, detail *core.Detail, table *core.Table, notifier core.Notifier, logger *log.Logger) error {
 	if err != nil {
 		detail.Status = core.Error
 		detail.MessageError = err.Error()
@@ -62,7 +62,7 @@ func notify(err error, detail *core.Detail, table *core.Table, notifier core.Not
 
 	logger.Println("Finishing Crawler for lopido.com ...")
 
-	if err := notifier.Notify(detail); err != nil {
+	if err := notifier.Notify(ctx, detail); err != nil {
 		logger.Println("Notify detail failed: ", err.Error())
 		return err
 	}

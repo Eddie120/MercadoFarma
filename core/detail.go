@@ -8,7 +8,7 @@ const NotFound DetailStatus = "not_found"
 const Found DetailStatus = "found"
 
 type Detail struct {
-	Id             int64        `json:"id"`
+	Id             string       `json:"id"`
 	CanonicalQuery string       `json:"canonical_query"` // concatenate(ip::query::date)
 	Status         DetailStatus `json:"status"`
 	MessageError   string       `json:"message_error"`
@@ -27,7 +27,7 @@ func (d *Detail) LogName() string {
 
 func (d *Detail) LogProperties() map[string]interface{} {
 	return map[string]interface{}{
-		"i_id":              d.Id,
+		"s_id":              d.Id,
 		"s_canonical_query": d.CanonicalQuery,
 		"s_status":          d.Status,
 		"s_message_error":   d.MessageError,
