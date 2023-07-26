@@ -35,7 +35,7 @@ func (handler *CrawlerHandlerProcessor) Run(ctx context.Context) error {
 }
 
 type Notifier interface {
-	Notify(details *Detail) error
+	Notify(ctx context.Context, details *Detail) error
 }
 
 type Crawler interface {

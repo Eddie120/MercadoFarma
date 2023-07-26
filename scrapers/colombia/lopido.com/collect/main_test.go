@@ -37,7 +37,7 @@ func TestCollector_Success(t *testing.T) {
 		City:    city,
 	}
 
-	var notifier core.HandlerFunc = func(d *core.Detail) error {
+	var notifier core.HandlerFunc = func(ctx context.Context, d *core.Detail) error {
 		c.Equal(core.Found, d.Status)
 		c.Len(d.Table.Rows, 11)
 		c.Equal("2891", d.Table.Rows[0].Cells[0].Value)
@@ -77,7 +77,7 @@ func TestCollector_Unexpected_StatusCode(t *testing.T) {
 		City:    city,
 	}
 
-	var notifier core.HandlerFunc = func(d *core.Detail) error {
+	var notifier core.HandlerFunc = func(ctx context.Context, d *core.Detail) error {
 		c.Equal(core.Error, d.Status)
 		c.Nil(d.Table)
 
