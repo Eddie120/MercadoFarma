@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/mercadofarma/services/core"
-	mockdb "github.com/mercadofarma/services/db/mocks"
+	mock_details "github.com/mercadofarma/services/db/details/mocks"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
 	"testing"
@@ -13,17 +13,14 @@ import (
 
 func TestServiceImplementation_InsertDetail(t *testing.T) {
 	c := assert.New(t)
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
 
-	dataAccess := mockdb.NewMockDataAccess(ctrl)
-	detailService := NewDetailService(dataAccess)
+	ctr := gomock.NewController(t)
+	mockDetailStore := mock_details.NewMockDetailFactory(ctr)
 
 	ctx := context.Background()
 	detail := &core.Detail{
-		Id:             int64(1),
-		CanonicalQuery: fmt.Sprintf("%s::%s::%s", "1.2.3.4", "acetaminofen", "20230718T094837"),
 		Status:         core.Found,
+		CanonicalQuery: fmt.Sprintf("%s::%s::%s", "1.2.3.4", "acetaminofen", "20230718T094837"),
 		Table: &core.Table{
 			TableName: "Basic Information",
 			Rows: []*core.Row{
@@ -38,44 +35,44 @@ func TestServiceImplementation_InsertDetail(t *testing.T) {
 		},
 	}
 
-	dataAccess.EXPECT().ExecWithContext(ctx, gomock.Any(), gomock.Any()).Return(nil, nil)
-	err := detailService.InsertDetail(ctx, detail)
+	mockDetailStore.EXPECT().InsertDetail(ctx, detail).Return(nil, nil)
+	svc := &serviceImplementation{
+		dataStore: mockDetailStore,
+	}
+
+	err := svc.InsertDetail(ctx, detail)
 	c.Nil(err)
 }
 
-func TestServiceImplementation_InsertDetail_NilValue(t *testing.T) {
+func TestServiceImplementation_InsertDetail_DbError(t *testing.T) {
 	c := assert.New(t)
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
 
-	dataAccess := mockdb.NewMockDataAccess(ctrl)
-	detailService := NewDetailService(dataAccess)
-
-	ctx := context.Background()
-
-	err := detailService.InsertDetail(ctx, nil)
-	c.NotNil(err)
-	c.Equal("detail cannot be nil", err.Error())
-}
-
-func TestServiceImplementation_InsertDetail_Error(t *testing.T) {
-	c := assert.New(t)
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-
-	dataAccess := mockdb.NewMockDataAccess(ctrl)
-	detailService := NewDetailService(dataAccess)
+	ctr := gomock.NewController(t)
+	mockDetailStore := mock_details.NewMockDetailFactory(ctr)
 
 	ctx := context.Background()
 	detail := &core.Detail{
-		Id:             int64(1),
-		CanonicalQuery: fmt.Sprintf("%s::%s::%s", "1.2.3.4", "acetaminofen", "20230718T094837"),
 		Status:         core.Found,
-		Table:          &core.Table{},
+		CanonicalQuery: fmt.Sprintf("%s::%s::%s", "acetaminofen", "123", "xyz"),
+		Table: &core.Table{
+			TableName: "Basic Information",
+			Rows: []*core.Row{
+				{
+					Cells: []*core.Cell{
+						{Name: string(core.ProductReference), Value: "2891"},
+						{Name: string(core.ProductName), Value: "AZITROMICINA 500 MG (MK)"},
+						{Name: string(core.ProductPresentation), Value: "CAJA X 3 TAB"},
+					},
+				},
+			},
+		},
 	}
 
-	dataAccess.EXPECT().ExecWithContext(ctx, gomock.Any(), gomock.Any()).Return(nil, errors.New("db error"))
-	err := detailService.InsertDetail(ctx, detail)
-	c.NotNil(err)
-	c.Equal("db error", err.Error())
+	mockDetailStore.EXPECT().InsertDetail(ctx, detail).Return(nil, errors.New("db error"))
+	svc := &serviceImplementation{
+		dataStore: mockDetailStore,
+	}
+
+	err := svc.InsertDetail(ctx, detail)
+	c.Equal(err.Error(), "db error")
 }

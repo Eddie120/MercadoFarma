@@ -30,15 +30,15 @@ type DataStore struct {
 	log        *log.Logger
 }
 
-func CreateDBConnection(driverName, dataSource string, maxOpenConnections, maxIdleConnections int) (*sql.DB, error) {
+func CreateDBConnection(driverName, dataSource string) (*sql.DB, error) {
 	db, err := sql.Open(driverName, dataSource)
 	if err != nil {
 		return nil, err
 	}
 
 	db.SetConnMaxLifetime(time.Minute * 3)
-	db.SetMaxOpenConns(maxOpenConnections)
-	db.SetMaxIdleConns(maxIdleConnections)
+	db.SetMaxOpenConns(10)
+	db.SetMaxIdleConns(10)
 
 	return db, nil
 }
