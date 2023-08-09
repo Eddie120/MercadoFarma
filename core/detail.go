@@ -9,7 +9,7 @@ const Found DetailStatus = "found"
 
 type Detail struct {
 	Id             string       `json:"id"`
-	CanonicalQuery string       `json:"canonical_query"` // concatenate(ip::query::date)
+	CanonicalQuery string       `json:"canonical_query"` // concatenate(ip::query::datetime)
 	Status         DetailStatus `json:"status"`
 	MessageError   string       `json:"message_error"`
 	Table          *Table       `json:"table"`

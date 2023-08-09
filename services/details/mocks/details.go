@@ -12,31 +12,31 @@ import (
 	gomock "go.uber.org/mock/gomock"
 )
 
-// MockService is a mock of Service interface.
-type MockService struct {
+// MockDetailService is a mock of DetailService interface.
+type MockDetailService struct {
 	ctrl     *gomock.Controller
-	recorder *MockServiceMockRecorder
+	recorder *MockDetailServiceMockRecorder
 }
 
-// MockServiceMockRecorder is the mock recorder for MockService.
-type MockServiceMockRecorder struct {
-	mock *MockService
+// MockDetailServiceMockRecorder is the mock recorder for MockDetailService.
+type MockDetailServiceMockRecorder struct {
+	mock *MockDetailService
 }
 
-// NewMockService creates a new mock instance.
-func NewMockService(ctrl *gomock.Controller) *MockService {
-	mock := &MockService{ctrl: ctrl}
-	mock.recorder = &MockServiceMockRecorder{mock}
+// NewMockDetailService creates a new mock instance.
+func NewMockDetailService(ctrl *gomock.Controller) *MockDetailService {
+	mock := &MockDetailService{ctrl: ctrl}
+	mock.recorder = &MockDetailServiceMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockService) EXPECT() *MockServiceMockRecorder {
+func (m *MockDetailService) EXPECT() *MockDetailServiceMockRecorder {
 	return m.recorder
 }
 
 // InsertDetail mocks base method.
-func (m *MockService) InsertDetail(ctx context.Context, detail *core.Detail) error {
+func (m *MockDetailService) InsertDetail(ctx context.Context, detail *core.Detail) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "InsertDetail", ctx, detail)
 	ret0, _ := ret[0].(error)
@@ -44,7 +44,7 @@ func (m *MockService) InsertDetail(ctx context.Context, detail *core.Detail) err
 }
 
 // InsertDetail indicates an expected call of InsertDetail.
-func (mr *MockServiceMockRecorder) InsertDetail(ctx, detail interface{}) *gomock.Call {
+func (mr *MockDetailServiceMockRecorder) InsertDetail(ctx, detail interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InsertDetail", reflect.TypeOf((*MockService)(nil).InsertDetail), ctx, detail)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InsertDetail", reflect.TypeOf((*MockDetailService)(nil).InsertDetail), ctx, detail)
 }

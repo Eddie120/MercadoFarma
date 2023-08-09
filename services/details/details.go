@@ -5,50 +5,56 @@ import (
 	"errors"
 	"github.com/google/uuid"
 	"github.com/mercadofarma/services/core"
-	"github.com/mercadofarma/services/db"
-	"log"
+	detailstore "github.com/mercadofarma/services/db/details"
 )
 
-var logger = log.Default()
+var (
+	errMissingStatus         = errors.New("status cannot be empty")
+	errInvalidDetailStatus   = errors.New("invalid detail status")
+	errMissingCanonicalQuery = errors.New("canonical query is required")
+	errMissingTable          = errors.New("table cannot be nil")
 
-type Service interface {
+	validDetailStatuses = map[core.DetailStatus]bool{
+		core.None:     true,
+		core.Error:    true,
+		core.NotFound: true,
+		core.Found:    true,
+	}
+)
+
+type DetailService interface {
 	InsertDetail(ctx context.Context, detail *core.Detail) error
 }
 
-type ServiceImplementation struct {
-	dbAccess db.DataAccess
+type serviceImplementation struct {
+	dataStore detailstore.DetailStore
 }
 
-func NewDetailService(dbAccess db.DataAccess) Service {
-	return &ServiceImplementation{
-		dbAccess: dbAccess,
+func NewDetailService() DetailService {
+	return &serviceImplementation{
+		dataStore: detailstore.NewDetailStore(),
 	}
 }
 
-func (service *ServiceImplementation) InsertDetail(ctx context.Context, detail *core.Detail) error {
-	if detail == nil {
-		return errors.New("detail cannot be nil")
+func (sv *serviceImplementation) InsertDetail(ctx context.Context, detail *core.Detail) error {
+	if detail.Status == "" {
+		return errMissingStatus
+	}
+
+	if !validDetailStatuses[detail.Status] {
+		return errInvalidDetailStatus
 	}
 
 	if detail.CanonicalQuery == "" {
-		return errors.New("canonical query is required")
+		return errMissingCanonicalQuery
 	}
 
 	if detail.Table == nil {
-		return errors.New("table cannot be nil")
+		return errMissingTable
 	}
 
 	detail.Id = uuid.New().String()
+	_, err := sv.dataStore.InsertDetail(ctx, detail)
 
-	const query string = "INSERT INTO mercadofarma.details (id,canonical_query,status,message_error,table) VALUES(?,?,?,?);"
-	args := []interface{}{detail.CanonicalQuery, detail.Status, detail.MessageError, detail.Table}
-
-	_, err := service.dbAccess.ExecWithContext(ctx, query, args...)
-	if err != nil {
-		logger.Println("Call service.InsertDetail failed: ", err.Error())
-
-		return err
-	}
-
-	return nil
+	return err
 }
