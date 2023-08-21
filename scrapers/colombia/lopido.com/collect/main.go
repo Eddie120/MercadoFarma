@@ -24,6 +24,7 @@ func (c *Collector) Crawl(ctx context.Context, input *core.SearchInput, notifier
 	logger.Println("Starting Crawler for lopido.com")
 
 	detail := core.NewDetail()
+	detail.CanonicalQuery = input.CanonicalQuery
 	client := http.Client{}
 
 	scraper, err := lopido.NewScraper(&client, input.Query, input.Country, input.City, logger)

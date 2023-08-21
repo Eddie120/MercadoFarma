@@ -1,0 +1,103 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Mercadofarma API",
+    "description": "Find the best price for your medicine",
+    "contact": {
+      "name": "Eddie Riascos",
+      "email": "eddiedanielriascosgomez@gmail.com"
+    },
+    "version": "1.0.0"
+  },
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "securityDefinitions": {
+    "sso-jwt": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
+    }
+  },
+  "security": [
+    {
+      "sso-jwt": []
+    }
+  ],
+  "paths": {
+    "/search": {
+      "post": {
+        "description": "Create a search input",
+        "parameters": [
+          {
+            "name": "SearchInput",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SearchInput"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A search input created",
+            "schema": {
+              "$ref": "#/definitions/SearchInputResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "sso-jwt": []
+          }
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "SearchInput": {
+      "type": "object",
+      "properties": {
+         "query": {
+           "type": "string",
+           "description": "product name"
+         },
+        "country": {
+          "type": "string",
+          "description": "country name",
+          "enum": [
+            "CO"
+          ]
+        },
+        "city": {
+          "type": "string",
+          "description": "city name",
+          "enum": [
+            "Cali",
+            "Bogota",
+            "Medellin",
+            "Barranquilla"
+          ]
+        }
+      }
+    },
+    "SearchInputResponse": {
+      "type": "object",
+      "description": "Search Input response",
+      "properties": {
+          "searchInputId": {
+            "type": "string"
+          }
+      }, "example": {
+        "searchInputId": "be16910858a41fd19ea5c1b4e9decca9a784d1024cb00b2158defe2f29dc86dd"
+      }
+    }
+  }
+}

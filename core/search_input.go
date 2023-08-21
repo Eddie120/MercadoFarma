@@ -16,7 +16,7 @@ type SearchInput struct {
 	Query          string  `json:"query"`
 	Country        Country `json:"country"`
 	City           City    `json:"city"`
-	CanonicalQuery string  `json:"canonical_query"`
+	CanonicalQuery string  `json:"canonical_query"` // concatenate(ip::query::datetime) reuse this attr to create details
 }
 
 func NewSearchInput(data []byte) (*SearchInput, error) {
