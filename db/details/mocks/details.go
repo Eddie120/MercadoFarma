@@ -13,74 +13,31 @@ import (
 	gomock "go.uber.org/mock/gomock"
 )
 
-// MockDynamoDbAPI is a mock of DynamoDbAPI interface.
-type MockDynamoDbAPI struct {
+// MockDetailStore is a mock of DetailStore interface.
+type MockDetailStore struct {
 	ctrl     *gomock.Controller
-	recorder *MockDynamoDbAPIMockRecorder
+	recorder *MockDetailStoreMockRecorder
 }
 
-// MockDynamoDbAPIMockRecorder is the mock recorder for MockDynamoDbAPI.
-type MockDynamoDbAPIMockRecorder struct {
-	mock *MockDynamoDbAPI
+// MockDetailStoreMockRecorder is the mock recorder for MockDetailStore.
+type MockDetailStoreMockRecorder struct {
+	mock *MockDetailStore
 }
 
-// NewMockDynamoDbAPI creates a new mock instance.
-func NewMockDynamoDbAPI(ctrl *gomock.Controller) *MockDynamoDbAPI {
-	mock := &MockDynamoDbAPI{ctrl: ctrl}
-	mock.recorder = &MockDynamoDbAPIMockRecorder{mock}
+// NewMockDetailStore creates a new mock instance.
+func NewMockDetailStore(ctrl *gomock.Controller) *MockDetailStore {
+	mock := &MockDetailStore{ctrl: ctrl}
+	mock.recorder = &MockDetailStoreMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockDynamoDbAPI) EXPECT() *MockDynamoDbAPIMockRecorder {
-	return m.recorder
-}
-
-// PutItem mocks base method.
-func (m *MockDynamoDbAPI) PutItem(ctx context.Context, params *dynamodb.PutItemInput, optFns ...func(*dynamodb.Options)) (*dynamodb.PutItemOutput, error) {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{ctx, params}
-	for _, a := range optFns {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "PutItem", varargs...)
-	ret0, _ := ret[0].(*dynamodb.PutItemOutput)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// PutItem indicates an expected call of PutItem.
-func (mr *MockDynamoDbAPIMockRecorder) PutItem(ctx, params interface{}, optFns ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{ctx, params}, optFns...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PutItem", reflect.TypeOf((*MockDynamoDbAPI)(nil).PutItem), varargs...)
-}
-
-// MockDetailFactory is a mock of DetailFactory interface.
-type MockDetailFactory struct {
-	ctrl     *gomock.Controller
-	recorder *MockDetailFactoryMockRecorder
-}
-
-// MockDetailFactoryMockRecorder is the mock recorder for MockDetailFactory.
-type MockDetailFactoryMockRecorder struct {
-	mock *MockDetailFactory
-}
-
-// NewMockDetailFactory creates a new mock instance.
-func NewMockDetailFactory(ctrl *gomock.Controller) *MockDetailFactory {
-	mock := &MockDetailFactory{ctrl: ctrl}
-	mock.recorder = &MockDetailFactoryMockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockDetailFactory) EXPECT() *MockDetailFactoryMockRecorder {
+func (m *MockDetailStore) EXPECT() *MockDetailStoreMockRecorder {
 	return m.recorder
 }
 
 // InsertDetail mocks base method.
-func (m *MockDetailFactory) InsertDetail(ctx context.Context, detail *core.Detail) (*dynamodb.PutItemOutput, error) {
+func (m *MockDetailStore) InsertDetail(ctx context.Context, detail *core.Detail) (*dynamodb.PutItemOutput, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "InsertDetail", ctx, detail)
 	ret0, _ := ret[0].(*dynamodb.PutItemOutput)
@@ -89,7 +46,7 @@ func (m *MockDetailFactory) InsertDetail(ctx context.Context, detail *core.Detai
 }
 
 // InsertDetail indicates an expected call of InsertDetail.
-func (mr *MockDetailFactoryMockRecorder) InsertDetail(ctx, detail interface{}) *gomock.Call {
+func (mr *MockDetailStoreMockRecorder) InsertDetail(ctx, detail interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InsertDetail", reflect.TypeOf((*MockDetailFactory)(nil).InsertDetail), ctx, detail)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InsertDetail", reflect.TypeOf((*MockDetailStore)(nil).InsertDetail), ctx, detail)
 }

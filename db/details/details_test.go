@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/mercadofarma/services/core"
-	mock_details "github.com/mercadofarma/services/db/details/mocks"
+	dynamodb_mock "github.com/mercadofarma/services/db/mocks"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
 	"testing"
@@ -18,7 +18,7 @@ func TestServiceImplementation_InsertDetail(t *testing.T) {
 	defer ctrl.Finish()
 
 	detailStore := new(ServiceImplementation)
-	mockDynamoDbClient := mock_details.NewMockDynamoDbAPI(ctrl)
+	mockDynamoDbClient := dynamodb_mock.NewMockDynamoDbAPI(ctrl)
 	mockDynamoDbClient.EXPECT().PutItem(context.Background(), gomock.Any(), gomock.Any()).Return(&dynamodb.PutItemOutput{}, nil)
 
 	detailStore.DynamoDbClient = mockDynamoDbClient
@@ -52,7 +52,7 @@ func TestServiceImplementation_InsertDetail_Error(t *testing.T) {
 	defer ctrl.Finish()
 
 	detailStore := new(ServiceImplementation)
-	mockDynamoDbClient := mock_details.NewMockDynamoDbAPI(ctrl)
+	mockDynamoDbClient := dynamodb_mock.NewMockDynamoDbAPI(ctrl)
 	mockDynamoDbClient.EXPECT().PutItem(context.Background(), gomock.Any(), gomock.Any()).Return(nil, errors.New("db error"))
 
 	detailStore.DynamoDbClient = mockDynamoDbClient

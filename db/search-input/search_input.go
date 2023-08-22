@@ -1,4 +1,4 @@
-package details
+package search_input
 
 import (
 	"context"
@@ -13,10 +13,10 @@ import (
 
 var log = log2.Default()
 
-const detailTable = "details"
+const searchInputsTable = "search-inputs"
 
-type DetailStore interface {
-	InsertDetail(ctx context.Context, detail *core.Detail) (*dynamodb.PutItemOutput, error)
+type SearchInputStore interface {
+	InsertSearchInput(ctx context.Context, searchInput *core.SearchInput) (*dynamodb.PutItemOutput, error)
 }
 
 type ServiceImplementation struct {
@@ -24,7 +24,7 @@ type ServiceImplementation struct {
 	table          string
 }
 
-func NewDetailStore() DetailStore {
+func NewSearchInputStore() SearchInputStore {
 	cfg, err := config.LoadDefaultConfig(context.TODO())
 	if err != nil {
 		log.Fatal(err)
@@ -34,14 +34,14 @@ func NewDetailStore() DetailStore {
 
 	return &ServiceImplementation{
 		DynamoDbClient: client,
-		table:          detailTable,
+		table:          searchInputsTable,
 	}
 }
 
-func (service *ServiceImplementation) InsertDetail(ctx context.Context, detail *core.Detail) (*dynamodb.PutItemOutput, error) {
-	item, err := attributevalue.MarshalMap(detail)
+func (service *ServiceImplementation) InsertSearchInput(ctx context.Context, searchInput *core.SearchInput) (*dynamodb.PutItemOutput, error) {
+	item, err := attributevalue.MarshalMap(searchInput)
 	if err != nil {
-		log.Println("error calling service.InsertDetail: marshalling map error - ", err.Error())
+		log.Println("error calling service.InsertSearchInput: marshalling map error - ", err.Error())
 		return nil, err
 	}
 
@@ -52,7 +52,7 @@ func (service *ServiceImplementation) InsertDetail(ctx context.Context, detail *
 
 	output, err := service.DynamoDbClient.PutItem(ctx, input)
 	if err != nil {
-		log.Println("error calling service.InsertDetail: put item failed - ", err.Error())
+		log.Println("error calling service.InsertSearchInput: put item failed - ", err.Error())
 		return nil, err
 	}
 
