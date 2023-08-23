@@ -34,7 +34,6 @@ func TestHappyPath(t *testing.T) {
 	ctx := context.Background()
 	dtMock := dtServiceMock.NewMockDetailService(ctrl)
 
-	// TODO: create detail object according sample file
 	detail := gomock.Any()
 	dtMock.EXPECT().InsertDetail(ctx, detail).Return(nil)
 	detailService = dtMock
@@ -63,8 +62,7 @@ func TestDetailServiceError(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	ctx := context.Background()
 	dtMock := dtServiceMock.NewMockDetailService(ctrl)
-
-	// TODO: create detail object according sample file
+	
 	detail := gomock.Any()
 	dtMock.EXPECT().InsertDetail(ctx, detail).Return(assert.AnError)
 	detailService = dtMock

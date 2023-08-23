@@ -3,7 +3,6 @@ package search_input
 import (
 	"context"
 	"github.com/aws/aws-sdk-go-v2/aws"
-	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/mercadofarma/services/core"
@@ -24,14 +23,8 @@ type ServiceImplementation struct {
 	table          string
 }
 
-func NewSearchInputStore() SearchInputStore {
-	cfg, err := config.LoadDefaultConfig(context.TODO())
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	client := dynamodb.NewFromConfig(cfg)
-
+// NewSearchInputStore create a new searchInput store
+func NewSearchInputStore(client db.DynamoDbAPI) SearchInputStore {
 	return &ServiceImplementation{
 		DynamoDbClient: client,
 		table:          searchInputsTable,

@@ -30,9 +30,9 @@ type serviceImplementation struct {
 	dataStore detailstore.DetailStore
 }
 
-func NewDetailService() DetailService {
+func NewDetailService(detailStore detailstore.DetailStore) DetailService {
 	return &serviceImplementation{
-		dataStore: detailstore.NewDetailStore(),
+		dataStore: detailStore,
 	}
 }
 

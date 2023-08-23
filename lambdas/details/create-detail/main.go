@@ -6,11 +6,17 @@ import (
 	"errors"
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
+	"github.com/mercadofarma/services/aws"
 	"github.com/mercadofarma/services/core"
+	detailstore "github.com/mercadofarma/services/db/details"
 	dtservice "github.com/mercadofarma/services/services/details"
 )
 
-var detailService = dtservice.NewDetailService()
+// setting up the services
+var globalConfig = aws.NewConfig(context.Background())
+var detailStore = detailstore.NewDetailStore(dynamodb.NewFromConfig(globalConfig))
+var detailService = dtservice.NewDetailService(detailStore)
 
 const errEmptyMessage = "empty message"
 
