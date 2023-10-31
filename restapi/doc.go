@@ -9,7 +9,7 @@
 //	Host: localhost
 //	BasePath: /
 //	Version: 1.0.0
-//	Contact: Eddie Riascos<eddiedanielriascosgomez@gmail.com>
+//	Contact: Eddie Daniel Riascos Gomez<eddiedanielriascosgomez@gmail.com>
 //
 //	Consumes:
 //	  - application/json

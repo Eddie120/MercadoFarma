@@ -3,12 +3,9 @@ package restapi
 import (
 	"context"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
-	"github.com/mercadofarma/services/aws"
-	"github.com/mercadofarma/services/controllers"
-	"github.com/mercadofarma/services/db"
-	"github.com/mercadofarma/services/db/details"
-	searchInput "github.com/mercadofarma/services/db/search-input"
-	search_input "github.com/mercadofarma/services/services/search-input"
+	_dynamodb "github.com/mercadofarma/services/db/dynamodb"
+	"github.com/mercadofarma/services/repos/business"
+	businessService "github.com/mercadofarma/services/services/business"
 	"go.uber.org/dig"
 )
 
@@ -20,25 +17,19 @@ func buildContainer() *dig.Container {
 		panic(err)
 	}
 
-	provider(func() db.DynamoDbAPI {
-		cfg := aws.NewConfig(context.Background())
-		return dynamodb.NewFromConfig(cfg)
+	provider(func() *dynamodb.Client {
+		return _dynamodb.NewDynamoDBClient(context.Background())
 	})
 
-	provider(func(client db.DynamoDbAPI) details.DetailStore {
-		return details.NewDetailStore(client)
+	// business storage
+	provider(func(client *dynamodb.Client) business.BusinessRepo {
+		return business.NewBusinessRepo(client)
 	})
 
-	provider(func(client db.DynamoDbAPI) searchInput.SearchInputStore {
-		return searchInput.NewSearchInputStore(client)
+	// business service
+	provider(func(storage business.BusinessRepo) businessService.BusinessService {
+		return businessService.NewBusinessService(storage)
 	})
-
-	provider(func(searchStore searchInput.SearchInputStore) search_input.SearchInputService {
-		return search_input.NewSearchInputService(searchStore)
-	})
-
-	// controllers
-	provider(controllers.NewSearchInputController)
 
 	return container
 }

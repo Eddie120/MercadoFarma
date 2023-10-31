@@ -33,35 +33,50 @@ func init() {
     "description": "Find the best price for your medicine",
     "title": "Mercadofarma API",
     "contact": {
-      "name": "Eddie Riascos",
+      "name": "Eddie Daniel Riascos Gomez",
       "email": "eddiedanielriascosgomez@gmail.com"
     },
     "version": "1.0.0"
   },
   "paths": {
-    "/search": {
+    "/v1/admin/signup": {
       "post": {
         "security": [
           {
             "sso-jwt": []
           }
         ],
-        "description": "Create a search input",
+        "description": "Sign up for business.",
+        "tags": [
+          "business"
+        ],
+        "summary": "Sign up for business.",
+        "operationId": "signUpAdmin",
         "parameters": [
           {
-            "name": "SearchInput",
+            "description": "SignUpAdminRequest",
+            "name": "SignUpAdminRequest",
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/SearchInput"
+              "$ref": "#/definitions/SignUpAdminRequest"
             }
           }
         ],
         "responses": {
-          "200": {
-            "description": "A search input created",
+          "204": {
+            "description": "No content"
+          },
+          "400": {
+            "description": "Invalid request",
             "schema": {
-              "$ref": "#/definitions/SearchInputResponse"
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
             }
           }
         }
@@ -69,42 +84,90 @@ func init() {
     }
   },
   "definitions": {
-    "SearchInput": {
-      "type": "object",
+    "BusinessOpeningHour": {
       "properties": {
-        "city": {
-          "description": "city name",
+        "day": {
           "type": "string",
           "enum": [
-            "Cali",
-            "Bogota",
-            "Medellin",
-            "Barranquilla"
+            "monday",
+            "tuesday",
+            "wednesday",
+            "thursday",
+            "friday",
+            "saturday",
+            "sunday"
           ]
         },
-        "country": {
-          "description": "country name",
-          "type": "string",
-          "enum": [
-            "CO"
-          ]
+        "endingTime": {
+          "type": "string"
         },
-        "query": {
-          "description": "product name",
+        "startTime": {
           "type": "string"
         }
       }
     },
-    "SearchInputResponse": {
-      "description": "Search Input response",
+    "Error": {
       "type": "object",
       "properties": {
-        "searchInputId": {
+        "code": {
+          "type": "string"
+        },
+        "message": {
           "type": "string"
         }
-      },
-      "example": {
-        "searchInputId": "be16910858a41fd19ea5c1b4e9decca9a784d1024cb00b2158defe2f29dc86dd"
+      }
+    },
+    "SignUpAdminRequest": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "string"
+        },
+        "businessName": {
+          "type": "string"
+        },
+        "businessOpeningHours": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BusinessOpeningHour"
+          }
+        },
+        "businessType": {
+          "type": "string",
+          "enum": [
+            "FARMACIA",
+            "TIENDA_NATURISTA",
+            "TIENDA_COSMETICA",
+            "OTRO"
+          ]
+        },
+        "email": {
+          "type": "string",
+          "format": "email"
+        },
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string",
+          "minLength": 8
+        },
+        "phoneNumber": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string",
+          "default": "admin"
+        },
+        "sectorId": {
+          "type": "string"
+        },
+        "taxId": {
+          "type": "string"
+        }
       }
     }
   },
@@ -137,35 +200,50 @@ func init() {
     "description": "Find the best price for your medicine",
     "title": "Mercadofarma API",
     "contact": {
-      "name": "Eddie Riascos",
+      "name": "Eddie Daniel Riascos Gomez",
       "email": "eddiedanielriascosgomez@gmail.com"
     },
     "version": "1.0.0"
   },
   "paths": {
-    "/search": {
+    "/v1/admin/signup": {
       "post": {
         "security": [
           {
             "sso-jwt": []
           }
         ],
-        "description": "Create a search input",
+        "description": "Sign up for business.",
+        "tags": [
+          "business"
+        ],
+        "summary": "Sign up for business.",
+        "operationId": "signUpAdmin",
         "parameters": [
           {
-            "name": "SearchInput",
+            "description": "SignUpAdminRequest",
+            "name": "SignUpAdminRequest",
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/SearchInput"
+              "$ref": "#/definitions/SignUpAdminRequest"
             }
           }
         ],
         "responses": {
-          "200": {
-            "description": "A search input created",
+          "204": {
+            "description": "No content"
+          },
+          "400": {
+            "description": "Invalid request",
             "schema": {
-              "$ref": "#/definitions/SearchInputResponse"
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
             }
           }
         }
@@ -173,42 +251,90 @@ func init() {
     }
   },
   "definitions": {
-    "SearchInput": {
-      "type": "object",
+    "BusinessOpeningHour": {
       "properties": {
-        "city": {
-          "description": "city name",
+        "day": {
           "type": "string",
           "enum": [
-            "Cali",
-            "Bogota",
-            "Medellin",
-            "Barranquilla"
+            "monday",
+            "tuesday",
+            "wednesday",
+            "thursday",
+            "friday",
+            "saturday",
+            "sunday"
           ]
         },
-        "country": {
-          "description": "country name",
-          "type": "string",
-          "enum": [
-            "CO"
-          ]
+        "endingTime": {
+          "type": "string"
         },
-        "query": {
-          "description": "product name",
+        "startTime": {
           "type": "string"
         }
       }
     },
-    "SearchInputResponse": {
-      "description": "Search Input response",
+    "Error": {
       "type": "object",
       "properties": {
-        "searchInputId": {
+        "code": {
+          "type": "string"
+        },
+        "message": {
           "type": "string"
         }
-      },
-      "example": {
-        "searchInputId": "be16910858a41fd19ea5c1b4e9decca9a784d1024cb00b2158defe2f29dc86dd"
+      }
+    },
+    "SignUpAdminRequest": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "string"
+        },
+        "businessName": {
+          "type": "string"
+        },
+        "businessOpeningHours": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BusinessOpeningHour"
+          }
+        },
+        "businessType": {
+          "type": "string",
+          "enum": [
+            "FARMACIA",
+            "TIENDA_NATURISTA",
+            "TIENDA_COSMETICA",
+            "OTRO"
+          ]
+        },
+        "email": {
+          "type": "string",
+          "format": "email"
+        },
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string",
+          "minLength": 8
+        },
+        "phoneNumber": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string",
+          "default": "admin"
+        },
+        "sectorId": {
+          "type": "string"
+        },
+        "taxId": {
+          "type": "string"
+        }
       }
     }
   },

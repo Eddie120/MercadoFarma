@@ -4,7 +4,7 @@
     "title": "Mercadofarma API",
     "description": "Find the best price for your medicine",
     "contact": {
-      "name": "Eddie Riascos",
+      "name": "Eddie Daniel Riascos Gomez",
       "email": "eddiedanielriascosgomez@gmail.com"
     },
     "version": "1.0.0"
@@ -32,24 +32,37 @@
     }
   ],
   "paths": {
-    "/search": {
+    "/v1/admin/signup": {
       "post": {
-        "description": "Create a search input",
+        "summary": "Sign up for business.",
+        "description": "Sign up for business.",
+        "operationId": "signUpAdmin",
+        "tags": ["business"],
         "parameters": [
           {
-            "name": "SearchInput",
+            "name": "SignUpAdminRequest",
             "in": "body",
-            "required": true,
             "schema": {
-              "$ref": "#/definitions/SearchInput"
-            }
+              "$ref": "#/definitions/SignUpAdminRequest"
+            },
+            "description": "SignUpAdminRequest",
+            "required": true
           }
         ],
         "responses": {
-          "200": {
-            "description": "A search input created",
+          "204": {
+            "description": "No content"
+          },
+          "400": {
+            "description": "Invalid request",
             "schema": {
-              "$ref": "#/definitions/SearchInputResponse"
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
             }
           }
         },
@@ -62,42 +75,86 @@
     }
   },
   "definitions": {
-    "SearchInput": {
+    "SignUpAdminRequest": {
       "type": "object",
       "properties": {
-         "query": {
-           "type": "string",
-           "description": "product name"
-         },
-        "country": {
+        "email": {
           "type": "string",
-          "description": "country name",
-          "enum": [
-            "CO"
-          ]
+          "format": "email"
         },
-        "city": {
+        "password": {
           "type": "string",
-          "description": "city name",
-          "enum": [
-            "Cali",
-            "Bogota",
-            "Medellin",
-            "Barranquilla"
-          ]
+          "minLength": 8
+        },
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string",
+          "default": "admin"
+        },
+        "businessType": {
+          "type": "string",
+          "enum": ["FARMACIA", "TIENDA_NATURISTA", "TIENDA_COSMETICA", "OTRO"]
+        },
+        "businessName": {
+          "type": "string"
+        },
+        "address": {
+          "type": "string"
+        },
+        "phoneNumber": {
+          "type": "string"
+        },
+        "taxId": {
+          "type": "string"
+        },
+        "sectorId": {
+          "type": "string"
+        },
+        "businessOpeningHours": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BusinessOpeningHour"
+          }
         }
       }
     },
-    "SearchInputResponse": {
-      "type": "object",
-      "description": "Search Input response",
+    "BusinessOpeningHour": {
       "properties": {
-          "searchInputId": {
-            "type": "string"
-          }
-      }, "example": {
-        "searchInputId": "be16910858a41fd19ea5c1b4e9decca9a784d1024cb00b2158defe2f29dc86dd"
+        "day": {
+          "type": "string",
+          "enum": [
+            "monday",
+            "tuesday",
+            "wednesday",
+            "thursday",
+            "friday",
+            "saturday",
+            "sunday"
+          ]
+        },
+        "startTime": {
+          "type": "string"
+        },
+        "endingTime": {
+          "type": "string"
+        }
+      }
+    },
+    "Error": {
+       "type":"object",
+        "properties": {
+            "code": {
+              "type": "string"
+            },
+           "message": {
+             "type": "string"
+           }
+        }
       }
     }
   }
-}
