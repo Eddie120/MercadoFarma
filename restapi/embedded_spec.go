@@ -25,8 +25,7 @@ func init() {
     "application/json"
   ],
   "schemes": [
-    "http",
-    "https"
+    "http"
   ],
   "swagger": "2.0",
   "info": {
@@ -41,11 +40,6 @@ func init() {
   "paths": {
     "/v1/admin/signup": {
       "post": {
-        "security": [
-          {
-            "sso-jwt": []
-          }
-        ],
         "description": "Sign up for business.",
         "tags": [
           "business"
@@ -177,12 +171,7 @@ func init() {
       "name": "Authorization",
       "in": "header"
     }
-  },
-  "security": [
-    {
-      "sso-jwt": []
-    }
-  ]
+  }
 }`))
 	FlatSwaggerJSON = json.RawMessage([]byte(`{
   "consumes": [
@@ -192,8 +181,7 @@ func init() {
     "application/json"
   ],
   "schemes": [
-    "http",
-    "https"
+    "http"
   ],
   "swagger": "2.0",
   "info": {
@@ -208,11 +196,6 @@ func init() {
   "paths": {
     "/v1/admin/signup": {
       "post": {
-        "security": [
-          {
-            "sso-jwt": []
-          }
-        ],
         "description": "Sign up for business.",
         "tags": [
           "business"
@@ -344,11 +327,6 @@ func init() {
       "name": "Authorization",
       "in": "header"
     }
-  },
-  "security": [
-    {
-      "sso-jwt": []
-    }
-  ]
+  }
 }`))
 }

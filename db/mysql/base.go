@@ -43,7 +43,7 @@ func CreateDBConnection(driverName, dataSource string) (*sql.DB, error) {
 	return db, nil
 }
 
-func NewDataAccess(db *sql.DB, driverName, dataSource string) (DataAccess, error) {
+func NewDataAccess(db *sql.DB, driverName, dataSource string) DataAccess {
 	dsn, err := mysql.ParseDSN(dataSource)
 	if err != nil {
 		dsn = &mysql.Config{}
@@ -62,7 +62,7 @@ func NewDataAccess(db *sql.DB, driverName, dataSource string) (DataAccess, error
 		Host:       host,
 		Port:       port,
 		log:        log.Default(),
-	}, nil
+	}
 }
 
 func (d *DataStore) Ping() error {

@@ -4,6 +4,9 @@ package restapi
 
 import (
 	"crypto/tls"
+	"fmt"
+	"github.com/mercadofarma/services/controllers"
+	"go.uber.org/dig"
 	"net/http"
 
 	"github.com/go-openapi/errors"
@@ -24,26 +27,21 @@ func configureAPI(api *operations.MercadofarmaAPI) http.Handler {
 	// configure the api here
 	api.ServeError = errors.ServeError
 
-	// Set your custom logger if needed. Default one is log.Printf
-	// Expected interface func(string, ...interface{})
-	//
-	// Example:
-	// api.Logger = log.Printf
-
 	api.UseSwaggerUI()
 	// To continue using redoc as your UI, uncomment the following line
 	// api.UseRedoc()
 
+	container := buildContainer()
+	invoker := func(dependency interface{}, opt ...dig.InvokeOption) {
+		err := container.Invoke(dependency, opt...)
+		if err != nil {
+			panic(fmt.Errorf("error calling dependency %s", err))
+		}
+	}
+
 	api.JSONConsumer = runtime.JSONConsumer()
 
 	api.JSONProducer = runtime.JSONProducer()
-
-	// Applies when the "Authorization" header is set
-	if api.SsoJwtAuth == nil {
-		api.SsoJwtAuth = func(token string) (interface{}, error) {
-			return nil, errors.NotImplemented("api key auth (sso-jwt) Authorization from header param [Authorization] has not yet been implemented")
-		}
-	}
 
 	// Set your custom authorizer if needed. Default one is security.Authorized()
 	// Expected interface runtime.Authorizer
@@ -51,11 +49,11 @@ func configureAPI(api *operations.MercadofarmaAPI) http.Handler {
 	// Example:
 	// api.APIAuthorizer = security.Authorized()
 
-	if api.BusinessSignUpAdminHandler == nil {
-		api.BusinessSignUpAdminHandler = business.SignUpAdminHandlerFunc(func(params business.SignUpAdminParams, principal interface{}) middleware.Responder {
-			return middleware.NotImplemented("operation business.SignUpAdmin has not yet been implemented")
+	invoker(func(controller *controllers.BusinessController) {
+		api.BusinessSignUpAdminHandler = business.SignUpAdminHandlerFunc(func(params business.SignUpAdminParams) middleware.Responder {
+			return controller.SignUp(params)
 		})
-	}
+	})
 
 	api.PreServerShutdown = func() {}
 

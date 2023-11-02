@@ -1,12 +1,14 @@
 package restapi
 
 import (
-	"context"
-	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
-	_dynamodb "github.com/mercadofarma/services/db/dynamodb"
+	"github.com/mercadofarma/services/controllers"
+	"github.com/mercadofarma/services/db/mysql"
 	"github.com/mercadofarma/services/repos/business"
+	"github.com/mercadofarma/services/repos/users"
 	businessService "github.com/mercadofarma/services/services/business"
+	userService "github.com/mercadofarma/services/services/users"
 	"go.uber.org/dig"
+	"os"
 )
 
 func buildContainer() *dig.Container {
@@ -14,21 +16,46 @@ func buildContainer() *dig.Container {
 
 	provider := func(constructor interface{}, opt ...dig.ProvideOption) {
 		err := container.Provide(constructor, opt...)
-		panic(err)
+		if err != nil {
+			panic(err)
+		}
 	}
 
-	provider(func() *dynamodb.Client {
-		return _dynamodb.NewDynamoDBClient(context.Background())
+	provider(func() mysql.DataAccess {
+		dataSource := os.Getenv("ENDPOINT_URL")
+		if dataSource == "" {
+			dataSource = "root:@tcp(127.0.0.1:3306)/mercadofarma" // localhost
+		}
+
+		const driverName = "mysql"
+
+		db, err := mysql.CreateDBConnection(driverName, dataSource)
+		if err != nil {
+			panic(err)
+		}
+
+		return mysql.NewDataAccess(db, driverName, dataSource)
 	})
 
-	// business storage
-	provider(func(client *dynamodb.Client) business.BusinessRepo {
-		return business.NewBusinessRepo(client)
+	// repos
+	provider(func(db mysql.DataAccess) users.UserRepo {
+		return users.NewUserRepo(db)
+	})
+	provider(func(db mysql.DataAccess) business.BusinessRepo {
+		return business.NewBusinessRepo(db)
 	})
 
-	// business service
-	provider(func(storage business.BusinessRepo) businessService.BusinessService {
-		return businessService.NewBusinessService(storage)
+	// services
+	provider(func(userRepo users.UserRepo) userService.UserService {
+		return userService.NewUserService(userRepo)
+	})
+	provider(func(businessRepo business.BusinessRepo, userService userService.UserService) businessService.BusinessService {
+		return businessService.NewBusinessService(businessRepo, userService)
+	})
+
+	// controllers
+	provider(func(userService userService.UserService, businessService businessService.BusinessService) *controllers.BusinessController {
+		return controllers.NewBusinessController(userService, businessService)
 	})
 
 	return container

@@ -44,16 +44,9 @@ func NewMercadofarmaAPI(spec *loads.Document) *MercadofarmaAPI {
 
 		JSONProducer: runtime.JSONProducer(),
 
-		BusinessSignUpAdminHandler: business.SignUpAdminHandlerFunc(func(params business.SignUpAdminParams, principal interface{}) middleware.Responder {
+		BusinessSignUpAdminHandler: business.SignUpAdminHandlerFunc(func(params business.SignUpAdminParams) middleware.Responder {
 			return middleware.NotImplemented("operation business.SignUpAdmin has not yet been implemented")
 		}),
-
-		// Applies when the "Authorization" header is set
-		SsoJwtAuth: func(token string) (interface{}, error) {
-			return nil, errors.NotImplemented("api key auth (sso-jwt) Authorization from header param [Authorization] has not yet been implemented")
-		},
-		// default authorizer is authorized meaning no requests are blocked
-		APIAuthorizer: security.Authorized(),
 	}
 }
 
@@ -89,13 +82,6 @@ type MercadofarmaAPI struct {
 	// JSONProducer registers a producer for the following mime types:
 	//   - application/json
 	JSONProducer runtime.Producer
-
-	// SsoJwtAuth registers a function that takes a token and returns a principal
-	// it performs authentication based on an api key Authorization provided in the header
-	SsoJwtAuth func(string) (interface{}, error)
-
-	// APIAuthorizer provides access control (ACL/RBAC/ABAC) by providing access to the request and authenticated principal
-	APIAuthorizer runtime.Authorizer
 
 	// BusinessSignUpAdminHandler sets the operation handler for the sign up admin operation
 	BusinessSignUpAdminHandler business.SignUpAdminHandler
@@ -176,10 +162,6 @@ func (o *MercadofarmaAPI) Validate() error {
 		unregistered = append(unregistered, "JSONProducer")
 	}
 
-	if o.SsoJwtAuth == nil {
-		unregistered = append(unregistered, "AuthorizationAuth")
-	}
-
 	if o.BusinessSignUpAdminHandler == nil {
 		unregistered = append(unregistered, "business.SignUpAdminHandler")
 	}
@@ -198,21 +180,12 @@ func (o *MercadofarmaAPI) ServeErrorFor(operationID string) func(http.ResponseWr
 
 // AuthenticatorsFor gets the authenticators for the specified security schemes
 func (o *MercadofarmaAPI) AuthenticatorsFor(schemes map[string]spec.SecurityScheme) map[string]runtime.Authenticator {
-	result := make(map[string]runtime.Authenticator)
-	for name := range schemes {
-		switch name {
-		case "sso-jwt":
-			scheme := schemes[name]
-			result[name] = o.APIKeyAuthenticator(scheme.Name, scheme.In, o.SsoJwtAuth)
-
-		}
-	}
-	return result
+	return nil
 }
 
 // Authorizer returns the registered authorizer
 func (o *MercadofarmaAPI) Authorizer() runtime.Authorizer {
-	return o.APIAuthorizer
+	return nil
 }
 
 // ConsumersFor gets the consumers for the specified media types.

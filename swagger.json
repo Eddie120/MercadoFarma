@@ -10,8 +10,7 @@
     "version": "1.0.0"
   },
   "schemes": [
-    "http",
-    "https"
+    "http"
   ],
   "consumes": [
     "application/json"
@@ -26,11 +25,6 @@
       "in": "header"
     }
   },
-  "security": [
-    {
-      "sso-jwt": []
-    }
-  ],
   "paths": {
     "/v1/admin/signup": {
       "post": {
@@ -65,12 +59,7 @@
               "$ref": "#/definitions/Error"
             }
           }
-        },
-        "security": [
-          {
-            "sso-jwt": []
-          }
-        ]
+        }
       }
     }
   },
