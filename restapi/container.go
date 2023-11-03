@@ -24,7 +24,7 @@ func buildContainer() *dig.Container {
 	provider(func() mysql.DataAccess {
 		dataSource := os.Getenv("ENDPOINT_URL")
 		if dataSource == "" {
-			dataSource = "root:@tcp(127.0.0.1:3306)/mercadofarma" // localhost
+			dataSource = "root:@tcp(127.0.0.1:3306)/mercadofarma?parseTime=true" // localhost
 		}
 
 		const driverName = "mysql"
