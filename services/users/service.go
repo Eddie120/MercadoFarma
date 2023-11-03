@@ -2,7 +2,8 @@ package users
 
 import (
 	"context"
-	"errors"
+	"github.com/mercadofarma/services/codes"
+	"github.com/mercadofarma/services/errors"
 	"github.com/mercadofarma/services/repos/models"
 	"github.com/mercadofarma/services/repos/users"
 	"golang.org/x/crypto/bcrypt"
@@ -18,13 +19,6 @@ type ServiceImpl struct {
 	userRepo users.UserRepo
 }
 
-var (
-	ErrInvalidEmail     = errors.New("invalid email")
-	ErrInvalidPassword  = errors.New("invalid password")
-	ErrInvalidFirstName = errors.New("invalid first name")
-	ErrInvalidRole      = errors.New("invalid role")
-)
-
 func NewUserService(userRepo users.UserRepo) *ServiceImpl {
 	return &ServiceImpl{
 		userRepo: userRepo,
@@ -34,6 +28,10 @@ func NewUserService(userRepo users.UserRepo) *ServiceImpl {
 func (svc *ServiceImpl) CreateUser(ctx context.Context, email string, password string, firstName string, lastName string, role, phoneNumber string) (*models.User, error) {
 	if err := svc.ValidateUserInputs(email, password, firstName, role); err != nil {
 		return nil, err
+	}
+
+	if svc.userRepo.CheckIfUserExist(ctx, email, models.Role(role)) {
+		return nil, errors.ErrorWithCode(codes.InvalidInput, "email is already registered")
 	}
 
 	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
@@ -61,19 +59,19 @@ func (svc *ServiceImpl) CreateUser(ctx context.Context, email string, password s
 
 func (svc *ServiceImpl) ValidateUserInputs(email string, password string, firstName string, role string) error {
 	if len(strings.Trim(email, " ")) == 0 {
-		return ErrInvalidEmail
+		return errors.ErrorWithCode(codes.InvalidInput, "invalid email")
 	}
 
 	if len(strings.Trim(password, " ")) == 0 {
-		return ErrInvalidPassword
+		return errors.ErrorWithCode(codes.InvalidInput, "invalid password")
 	}
 
 	if len(strings.Trim(firstName, " ")) == 0 {
-		return ErrInvalidFirstName
+		return errors.ErrorWithCode(codes.InvalidInput, "invalid first name")
 	}
 
-	if !models.IsValidRole[models.Role(role)] {
-		return ErrInvalidRole
+	if !models.IsValidRole[models.Role(role)] || string(models.ShopperRole) != role {
+		return errors.ErrorWithCode(codes.InvalidInput, "invalid role")
 	}
 
 	return nil

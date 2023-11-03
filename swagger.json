@@ -61,9 +61,134 @@
           }
         }
       }
+    },
+    "/v1/signup": {
+      "post": {
+        "summary": "Sign up for shoppers",
+        "description": "Sign up for shoppers",
+        "operationId": "signUpShopper",
+        "tags": ["shopper"],
+        "parameters": [
+          {
+            "name": "SignUpShopperRequest",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/SignUpShopperRequest",
+              "default": "admin"
+            },
+            "description": "SignUpShopperRequest",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No content"
+          },
+          "400": {
+            "description": "Invalid request",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/v1/login": {
+      "post": {
+        "summary": "Login for shoppers and business",
+        "description": "Login for shoppers and business",
+        "operationId": "login",
+        "tags": ["shopper", "business"],
+        "parameters": [
+          {
+            "name": "LoginRequest",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/LoginRequest",
+              "default": "shopper"
+            },
+            "description": "LoginRequest",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
+    "LoginRequest": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "format": "email"
+        },
+        "password": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string",
+          "enum": [
+            "admin",
+            "shopper"
+          ]
+        }
+      }
+    },
+    "SignUpShopperRequest": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "format": "email"
+        },
+        "password": {
+          "type": "string",
+          "minLength": 8
+        },
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string",
+          "default": "shopper"
+        }
+      }
+    },
     "SignUpAdminRequest": {
       "type": "object",
       "properties": {

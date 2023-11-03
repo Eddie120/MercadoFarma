@@ -8,6 +8,8 @@ ALTER SCHEMA `mercadofarma`  DEFAULT CHARACTER SET utf8  DEFAULT COLLATE utf8_ge
 CREATE TABLE IF NOT EXISTS `mercadofarma`.`users` (
 `user_id` VARCHAR(255) NOT NULL,
 `email` VARCHAR(255) NOT NULL,
+`first_name` VARCHAR(255) NOT NULL,
+`last_name` VARCHAR(255) NULL,
 `hash` VARCHAR(255) NOT NULL,
 `role` VARCHAR(45) NOT NULL COMMENT 'it can be shopper or admin',
 `active` TINYINT(4) NOT NULL DEFAULT 1,

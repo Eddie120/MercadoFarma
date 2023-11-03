@@ -20,6 +20,7 @@ import (
 	"github.com/go-openapi/swag"
 
 	"github.com/mercadofarma/services/restapi/operations/business"
+	"github.com/mercadofarma/services/restapi/operations/shopper"
 )
 
 // NewMercadofarmaAPI creates a new Mercadofarma instance
@@ -44,8 +45,14 @@ func NewMercadofarmaAPI(spec *loads.Document) *MercadofarmaAPI {
 
 		JSONProducer: runtime.JSONProducer(),
 
+		ShopperLoginHandler: shopper.LoginHandlerFunc(func(params shopper.LoginParams) middleware.Responder {
+			return middleware.NotImplemented("operation shopper.Login has not yet been implemented")
+		}),
 		BusinessSignUpAdminHandler: business.SignUpAdminHandlerFunc(func(params business.SignUpAdminParams) middleware.Responder {
 			return middleware.NotImplemented("operation business.SignUpAdmin has not yet been implemented")
+		}),
+		ShopperSignUpShopperHandler: shopper.SignUpShopperHandlerFunc(func(params shopper.SignUpShopperParams) middleware.Responder {
+			return middleware.NotImplemented("operation shopper.SignUpShopper has not yet been implemented")
 		}),
 	}
 }
@@ -83,8 +90,12 @@ type MercadofarmaAPI struct {
 	//   - application/json
 	JSONProducer runtime.Producer
 
+	// ShopperLoginHandler sets the operation handler for the login operation
+	ShopperLoginHandler shopper.LoginHandler
 	// BusinessSignUpAdminHandler sets the operation handler for the sign up admin operation
 	BusinessSignUpAdminHandler business.SignUpAdminHandler
+	// ShopperSignUpShopperHandler sets the operation handler for the sign up shopper operation
+	ShopperSignUpShopperHandler shopper.SignUpShopperHandler
 
 	// ServeError is called when an error is received, there is a default handler
 	// but you can set your own with this
@@ -162,8 +173,14 @@ func (o *MercadofarmaAPI) Validate() error {
 		unregistered = append(unregistered, "JSONProducer")
 	}
 
+	if o.ShopperLoginHandler == nil {
+		unregistered = append(unregistered, "shopper.LoginHandler")
+	}
 	if o.BusinessSignUpAdminHandler == nil {
 		unregistered = append(unregistered, "business.SignUpAdminHandler")
+	}
+	if o.ShopperSignUpShopperHandler == nil {
+		unregistered = append(unregistered, "shopper.SignUpShopperHandler")
 	}
 
 	if len(unregistered) > 0 {
@@ -256,7 +273,15 @@ func (o *MercadofarmaAPI) initHandlerCache() {
 	if o.handlers["POST"] == nil {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}
+	o.handlers["POST"]["/v1/login"] = shopper.NewLogin(o.context, o.ShopperLoginHandler)
+	if o.handlers["POST"] == nil {
+		o.handlers["POST"] = make(map[string]http.Handler)
+	}
 	o.handlers["POST"]["/v1/admin/signup"] = business.NewSignUpAdmin(o.context, o.BusinessSignUpAdminHandler)
+	if o.handlers["POST"] == nil {
+		o.handlers["POST"] = make(map[string]http.Handler)
+	}
+	o.handlers["POST"]["/v1/signup"] = shopper.NewSignUpShopper(o.context, o.ShopperSignUpShopperHandler)
 }
 
 // Serve creates a http handler to serve the API over HTTP

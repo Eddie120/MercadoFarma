@@ -48,6 +48,7 @@ func main() {
 		os.Exit(code)
 	}
 
+	server.Port = 8080
 	server.ConfigureAPI()
 
 	if err := server.Serve(); err != nil {

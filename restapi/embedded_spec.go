@@ -75,6 +75,94 @@ func init() {
           }
         }
       }
+    },
+    "/v1/login": {
+      "post": {
+        "description": "Login for shoppers and business",
+        "tags": [
+          "shopper",
+          "business"
+        ],
+        "summary": "Login for shoppers and business",
+        "operationId": "login",
+        "parameters": [
+          {
+            "description": "LoginRequest",
+            "name": "LoginRequest",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "default": "shopper",
+              "$ref": "#/definitions/LoginRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/v1/signup": {
+      "post": {
+        "description": "Sign up for shoppers",
+        "tags": [
+          "shopper"
+        ],
+        "summary": "Sign up for shoppers",
+        "operationId": "signUpShopper",
+        "parameters": [
+          {
+            "description": "SignUpShopperRequest",
+            "name": "SignUpShopperRequest",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "default": "admin",
+              "$ref": "#/definitions/SignUpShopperRequest"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No content"
+          },
+          "400": {
+            "description": "Invalid request",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -108,6 +196,25 @@ func init() {
         },
         "message": {
           "type": "string"
+        }
+      }
+    },
+    "LoginRequest": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "format": "email"
+        },
+        "password": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string",
+          "enum": [
+            "admin",
+            "shopper"
+          ]
         }
       }
     },
@@ -161,6 +268,29 @@ func init() {
         },
         "taxId": {
           "type": "string"
+        }
+      }
+    },
+    "SignUpShopperRequest": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "format": "email"
+        },
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string",
+          "minLength": 8
+        },
+        "role": {
+          "type": "string",
+          "default": "shopper"
         }
       }
     }
@@ -231,6 +361,94 @@ func init() {
           }
         }
       }
+    },
+    "/v1/login": {
+      "post": {
+        "description": "Login for shoppers and business",
+        "tags": [
+          "shopper",
+          "business"
+        ],
+        "summary": "Login for shoppers and business",
+        "operationId": "login",
+        "parameters": [
+          {
+            "description": "LoginRequest",
+            "name": "LoginRequest",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "default": "shopper",
+              "$ref": "#/definitions/LoginRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/v1/signup": {
+      "post": {
+        "description": "Sign up for shoppers",
+        "tags": [
+          "shopper"
+        ],
+        "summary": "Sign up for shoppers",
+        "operationId": "signUpShopper",
+        "parameters": [
+          {
+            "description": "SignUpShopperRequest",
+            "name": "SignUpShopperRequest",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "default": "admin",
+              "$ref": "#/definitions/SignUpShopperRequest"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No content"
+          },
+          "400": {
+            "description": "Invalid request",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -264,6 +482,25 @@ func init() {
         },
         "message": {
           "type": "string"
+        }
+      }
+    },
+    "LoginRequest": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "format": "email"
+        },
+        "password": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string",
+          "enum": [
+            "admin",
+            "shopper"
+          ]
         }
       }
     },
@@ -317,6 +554,29 @@ func init() {
         },
         "taxId": {
           "type": "string"
+        }
+      }
+    },
+    "SignUpShopperRequest": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "format": "email"
+        },
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string",
+          "minLength": 8
+        },
+        "role": {
+          "type": "string",
+          "default": "shopper"
         }
       }
     }

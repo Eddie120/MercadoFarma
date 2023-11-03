@@ -57,6 +57,9 @@ func buildContainer() *dig.Container {
 	provider(func(userService userService.UserService, businessService businessService.BusinessService) *controllers.BusinessController {
 		return controllers.NewBusinessController(userService, businessService)
 	})
+	provider(func(userService userService.UserService) *controllers.UserController {
+		return controllers.NewUserController(userService)
+	})
 
 	return container
 }

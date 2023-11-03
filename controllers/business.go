@@ -3,6 +3,7 @@ package controllers
 import (
 	"github.com/go-openapi/runtime/middleware"
 	"github.com/mercadofarma/services/codes"
+	swaggerModels "github.com/mercadofarma/services/models"
 	"github.com/mercadofarma/services/restapi/operations/business"
 	businessService "github.com/mercadofarma/services/services/business"
 	"github.com/mercadofarma/services/services/users"
@@ -23,7 +24,10 @@ func NewBusinessController(userService users.UserService, businessService busine
 
 func (ctrl *BusinessController) SignUp(params business.SignUpAdminParams) middleware.Responder {
 	if params.SignUpAdminRequest == nil {
-		return business.NewSignUpAdminBadRequest()
+		return business.NewSignUpAdminBadRequest().WithPayload(&swaggerModels.Error{
+			Code:    string(codes.InvalidInput),
+			Message: "signUpRequest can not be nil",
+		})
 	}
 
 	ctx := params.HTTPRequest.Context()

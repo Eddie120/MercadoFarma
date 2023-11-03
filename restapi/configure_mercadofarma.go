@@ -6,6 +6,7 @@ import (
 	"crypto/tls"
 	"fmt"
 	"github.com/mercadofarma/services/controllers"
+	"github.com/mercadofarma/services/restapi/operations/shopper"
 	"go.uber.org/dig"
 	"net/http"
 
@@ -51,6 +52,12 @@ func configureAPI(api *operations.MercadofarmaAPI) http.Handler {
 
 	invoker(func(controller *controllers.BusinessController) {
 		api.BusinessSignUpAdminHandler = business.SignUpAdminHandlerFunc(func(params business.SignUpAdminParams) middleware.Responder {
+			return controller.SignUp(params)
+		})
+	})
+
+	invoker(func(controller *controllers.UserController) {
+		api.ShopperSignUpShopperHandler = shopper.SignUpShopperHandlerFunc(func(params shopper.SignUpShopperParams) middleware.Responder {
 			return controller.SignUp(params)
 		})
 	})
