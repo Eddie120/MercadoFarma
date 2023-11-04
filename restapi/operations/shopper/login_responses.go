@@ -26,7 +26,7 @@ type LoginOK struct {
 	/*
 	  In: Body
 	*/
-	Payload string `json:"body,omitempty"`
+	Payload *models.AuthenticationResponse `json:"body,omitempty"`
 }
 
 // NewLoginOK creates LoginOK with default headers values
@@ -36,13 +36,13 @@ func NewLoginOK() *LoginOK {
 }
 
 // WithPayload adds the payload to the login o k response
-func (o *LoginOK) WithPayload(payload string) *LoginOK {
+func (o *LoginOK) WithPayload(payload *models.AuthenticationResponse) *LoginOK {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the login o k response
-func (o *LoginOK) SetPayload(payload string) {
+func (o *LoginOK) SetPayload(payload *models.AuthenticationResponse) {
 	o.Payload = payload
 }
 
@@ -50,9 +50,11 @@ func (o *LoginOK) SetPayload(payload string) {
 func (o *LoginOK) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
 	rw.WriteHeader(200)
-	payload := o.Payload
-	if err := producer.Produce(rw, payload); err != nil {
-		panic(err) // let the recovery middleware deal with this
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
 	}
 }
 
@@ -138,6 +140,51 @@ func (o *LoginUnauthorized) SetPayload(payload *models.Error) {
 func (o *LoginUnauthorized) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
 	rw.WriteHeader(401)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
+// LoginNotFoundCode is the HTTP code returned for type LoginNotFound
+const LoginNotFoundCode int = 404
+
+/*
+LoginNotFound Resource not found
+
+swagger:response loginNotFound
+*/
+type LoginNotFound struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewLoginNotFound creates LoginNotFound with default headers values
+func NewLoginNotFound() *LoginNotFound {
+
+	return &LoginNotFound{}
+}
+
+// WithPayload adds the payload to the login not found response
+func (o *LoginNotFound) WithPayload(payload *models.Error) *LoginNotFound {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the login not found response
+func (o *LoginNotFound) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *LoginNotFound) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(404)
 	if o.Payload != nil {
 		payload := o.Payload
 		if err := producer.Produce(rw, payload); err != nil {

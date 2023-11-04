@@ -8,4 +8,5 @@ const (
 	Unauthorized        ErrCode = "INVALID_AUTHENTICATION"
 	DataBaseError       ErrCode = "DATABASE_ERROR"
 	ResourceNotFound    ErrCode = "RESOURCE_NOT_FOUND"
+	RequiredInput       ErrCode = "REQUIRED_INPUT"
 )

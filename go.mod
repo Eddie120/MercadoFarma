@@ -14,6 +14,7 @@ require (
 	github.com/go-openapi/swag v0.22.4
 	github.com/go-openapi/validate v0.22.1
 	github.com/go-sql-driver/mysql v1.7.1
+	github.com/golang-jwt/jwt/v5 v5.0.0
 	github.com/google/uuid v1.4.0
 	github.com/jessevdk/go-flags v1.5.0
 	github.com/nyaruka/phonenumbers v1.1.8

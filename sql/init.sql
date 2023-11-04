@@ -20,6 +20,8 @@ UNIQUE INDEX `email_UNIQUE` (`email` ASC))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
+alter table `mercadofarma`.`users` add secret_key VARCHAR(255) not null;
+
 CREATE TABLE IF NOT EXISTS `mercadofarma`.`departments` (
 department_id INT(11) NOT NULL AUTO_INCREMENT,
 `zip_code` VARCHAR(45) NOT NULL,

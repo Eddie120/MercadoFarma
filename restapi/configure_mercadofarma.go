@@ -62,6 +62,12 @@ func configureAPI(api *operations.MercadofarmaAPI) http.Handler {
 		})
 	})
 
+	invoker(func(controller *controllers.UserController) {
+		api.ShopperLoginHandler = shopper.LoginHandlerFunc(func(params shopper.LoginParams) middleware.Responder {
+			return controller.Login(params)
+		})
+	})
+
 	api.PreServerShutdown = func() {}
 
 	api.ServerShutdown = func() {}

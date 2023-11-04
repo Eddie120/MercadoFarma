@@ -121,7 +121,7 @@
           "200": {
             "description": "Ok",
             "schema": {
-              "type": "string"
+              "$ref": "#/definitions/AuthenticationResponse"
             }
           },
           "400": {
@@ -132,6 +132,12 @@
           },
           "401": {
             "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -164,6 +170,39 @@
             "shopper"
           ]
         }
+      }
+    },
+    "AuthenticationResponse": {
+      "properties": {
+          "user": {
+            "type": "object",
+            "properties": {
+              "user_id": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string"
+              },
+              "firstName": {
+                "type": "string"
+              },
+              "lastName": {
+                "type": "string"
+              },
+              "phoneNumber": {
+                "type": "string"
+              },
+              "role": {
+                "type": "string"
+              },
+              "active": {
+                "type": "boolean"
+              }
+            }
+          },
+          "token": {
+            "type": "string"
+          }
       }
     },
     "SignUpShopperRequest": {

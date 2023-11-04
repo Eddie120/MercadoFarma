@@ -47,7 +47,7 @@ func (svc *UserRepoImpl) GetUserByEmail(ctx context.Context, email string, role 
 		role,
 	}
 
-	const query = "SELECT user_id,email,first_name,last_name,hash,role,active,creation_date,update_date FROM users WHERE email = ? AND ROLE = ?;"
+	const query = "SELECT user_id,email,first_name,last_name,hash,role,active,secret_key,creation_date,update_date FROM users WHERE email = ? AND ROLE = ?;"
 
 	rows, err := svc.db.QueryWithContext(ctx, query, params...)
 	if err != nil {
@@ -56,7 +56,7 @@ func (svc *UserRepoImpl) GetUserByEmail(ctx context.Context, email string, role 
 
 	defer rows.Close()
 	for rows.Next() {
-		if err = rows.Scan(&user.UserId, &user.Email, &user.FirstName, &user.LastName, &user.Hash, &user.Role, &user.Active, &user.CreationDate, &user.UpdateDate); err != nil {
+		if err = rows.Scan(&user.UserId, &user.Email, &user.FirstName, &user.LastName, &user.Hash, &user.Role, &user.Active, &user.SecretKey, &user.CreationDate, &user.UpdateDate); err != nil {
 			return nil, err
 		}
 	}
@@ -67,16 +67,18 @@ func (svc *UserRepoImpl) GetUserByEmail(ctx context.Context, email string, role 
 func (svc *UserRepoImpl) CreateUser(ctx context.Context, user *models.User) error {
 	current := time.Now()
 	user.UserId = fmt.Sprintf("%s-%s", userPrefix, uuid.New().String())
+	user.SecretKey = uuid.New().String()
 	user.CreationDate = &current
 	user.UpdateDate = &current
 
-	const query = "INSERT INTO users (user_id,email,hash,first_name,last_name,role,active,creation_date,update_date) values (?,?,?,?,?,?,?,?,?);"
+	const query = "INSERT INTO users (user_id,email,hash,first_name,last_name,secret_key,role,active,creation_date,update_date) values (?,?,?,?,?,?,?,?,?);"
 	params := []interface{}{
 		user.UserId,
 		user.Email,
 		user.Hash,
 		user.FirstName,
 		user.LastName,
+		user.SecretKey,
 		user.Role,
 		user.Active,
 		user.CreationDate,

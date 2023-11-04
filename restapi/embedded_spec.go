@@ -101,7 +101,7 @@ func init() {
           "200": {
             "description": "Ok",
             "schema": {
-              "type": "string"
+              "$ref": "#/definitions/AuthenticationResponse"
             }
           },
           "400": {
@@ -112,6 +112,12 @@ func init() {
           },
           "401": {
             "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -166,6 +172,39 @@ func init() {
     }
   },
   "definitions": {
+    "AuthenticationResponse": {
+      "properties": {
+        "token": {
+          "type": "string"
+        },
+        "user": {
+          "type": "object",
+          "properties": {
+            "active": {
+              "type": "boolean"
+            },
+            "email": {
+              "type": "string"
+            },
+            "firstName": {
+              "type": "string"
+            },
+            "lastName": {
+              "type": "string"
+            },
+            "phoneNumber": {
+              "type": "string"
+            },
+            "role": {
+              "type": "string"
+            },
+            "user_id": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
     "BusinessOpeningHour": {
       "properties": {
         "day": {
@@ -387,7 +426,7 @@ func init() {
           "200": {
             "description": "Ok",
             "schema": {
-              "type": "string"
+              "$ref": "#/definitions/AuthenticationResponse"
             }
           },
           "400": {
@@ -398,6 +437,12 @@ func init() {
           },
           "401": {
             "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -452,6 +497,65 @@ func init() {
     }
   },
   "definitions": {
+    "AuthenticationResponse": {
+      "properties": {
+        "token": {
+          "type": "string"
+        },
+        "user": {
+          "type": "object",
+          "properties": {
+            "active": {
+              "type": "boolean"
+            },
+            "email": {
+              "type": "string"
+            },
+            "firstName": {
+              "type": "string"
+            },
+            "lastName": {
+              "type": "string"
+            },
+            "phoneNumber": {
+              "type": "string"
+            },
+            "role": {
+              "type": "string"
+            },
+            "user_id": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "AuthenticationResponseUser": {
+      "type": "object",
+      "properties": {
+        "active": {
+          "type": "boolean"
+        },
+        "email": {
+          "type": "string"
+        },
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "phoneNumber": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        },
+        "user_id": {
+          "type": "string"
+        }
+      }
+    },
     "BusinessOpeningHour": {
       "properties": {
         "day": {
